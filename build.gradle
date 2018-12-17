@@ -6,12 +6,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: springBootVersion
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
+plugins {
+    id 'java'
+    id 'idea'
+}
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
@@ -24,14 +26,15 @@ repositories {
 }
 
 dependencies {
-    implementation('org.springframework.boot:spring-boot-starter-security')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('org.springframework.security:spring-security-test')
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 }
 
 idea.module {
     downloadSources = true;
     downloadJavadoc = true;
-    excludeDirs += file('.idea');
-    excludeDirs += file('_support');
+    excludeDirs += file('.idea')
+    excludeDirs += file('_support')
 }
