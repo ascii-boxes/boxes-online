@@ -87,7 +87,44 @@ public class InvocationTest
         throws IOException
     {
         final String json = "{\"indentationMode\": \"INVALID\"}";
-        final Invocation underTest = new ObjectMapper().readValue(json, Invocation.class);
+        new ObjectMapper().readValue(json, Invocation.class);
         Assert.fail("expected InvalidFormatException was not thrown");
+    }
+
+
+
+    @Test
+    public void testSerialization()
+        throws IOException
+    {
+        final Invocation original = new Invocation();
+        Invocation.Alignment alignment = new Invocation.Alignment();
+        alignment.setHorizontal(HorzAlign.Center);
+        alignment.setVertical(VertAlign.Bottom);
+        alignment.setJustification(HorzAlign.Left);
+        original.setAlignment(alignment);
+        original.setDesign("dog");
+        original.setIndentationMode(IndentationMode.Text);
+        original.setListDesigns(false);
+        Invocation.Padding padding = new Invocation.Padding();
+        padding.setTop(1);
+        padding.setRight(2);
+        padding.setBottom(3);
+        padding.setLeft(4);
+        original.setPadding(padding);
+        Invocation.Size size = new Invocation.Size();
+        size.setHeight(10);
+        size.setWidth(42);
+        original.setSize(size);
+        Invocation.Tabs tabs = new Invocation.Tabs();
+        tabs.setDistance(13);
+        tabs.setLeadingTabs(LeadingTabHandlingMode.Unexpand);
+        original.setTabHandling(tabs);
+        original.setVersion(true);
+
+        final String serialized = new ObjectMapper().writeValueAsString(original);
+        final Invocation deserialized = new ObjectMapper().readValue(serialized, Invocation.class);
+
+        Assert.assertNotNull(deserialized);
     }
 }

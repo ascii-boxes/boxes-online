@@ -1,5 +1,7 @@
 package com.thomasjensen.boxes.online;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.lang.Nullable;
 
@@ -8,6 +10,7 @@ import org.springframework.lang.Nullable;
  * Describes an invocation of *boxes* with all the parameters.
  */
 public class Invocation
+    implements Serializable
 {
     @JsonProperty
     private Alignment alignment;
@@ -36,6 +39,7 @@ public class Invocation
 
 
     public static class Alignment
+        implements Serializable
     {
         public static final Alignment DEFAULT = defaultAlignment();
 
@@ -111,6 +115,7 @@ public class Invocation
 
 
     public static class Padding
+        implements Serializable
     {
         public static final Padding DEFAULT = new Padding();
 
@@ -186,6 +191,7 @@ public class Invocation
 
 
     public static class Size
+        implements Serializable
     {
         @JsonProperty
         private int width;
@@ -225,6 +231,7 @@ public class Invocation
 
 
     public static class Tabs
+        implements Serializable
     {
         @JsonProperty
         private int distance;
