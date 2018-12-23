@@ -29,6 +29,9 @@ public class Validator
     /** max. tab stop distance, from {@code boxes.h.in} */
     private static final int MAX_TABSIZE = 16;
 
+    /** max. length of an accepted box design name */
+    private static final int MAX_DESIGN_NAME_LEN = 80;
+
     private Invocation invocation;
 
 
@@ -67,10 +70,21 @@ public class Validator
     private Invocation execute(@NonNull final Invocation pInvocation, final boolean pThrowEx)
         throws InvalidInvocationException
     {
+        handleDesignName(pInvocation.getDesign());
         handleBoxSize(pInvocation.getSize(), pThrowEx);
         handlePadding(pInvocation.getPadding());
         handleTabs(pInvocation.getTabHandling(), pThrowEx);
         return pInvocation;
+    }
+
+
+
+    private void handleDesignName(@Nullable final String pDesignName)
+        throws InvalidInvocationException
+    {
+        if (pDesignName != null && pDesignName.length() > MAX_DESIGN_NAME_LEN) {
+            throw new InvalidInvocationException("Specified design name too long");
+        }
     }
 
 
@@ -99,10 +113,10 @@ public class Validator
         throws InvalidInvocationException
     {
         if (pPadding != null) {
-            checkAndCorrect(pPadding.getTop() < 0, () -> pPadding.setTop(0));
-            checkAndCorrect(pPadding.getRight() < 0, () -> pPadding.setRight(0));
-            checkAndCorrect(pPadding.getBottom() < 0, () -> pPadding.setBottom(0));
-            checkAndCorrect(pPadding.getLeft() < 0, () -> pPadding.setLeft(0));
+            checkAndCorrect(pPadding.getTop() < -1, () -> pPadding.setTop(Invocation.Padding.NOT_SET));
+            checkAndCorrect(pPadding.getRight() < -1, () -> pPadding.setRight(Invocation.Padding.NOT_SET));
+            checkAndCorrect(pPadding.getBottom() < -1, () -> pPadding.setBottom(Invocation.Padding.NOT_SET));
+            checkAndCorrect(pPadding.getLeft() < -1, () -> pPadding.setLeft(Invocation.Padding.NOT_SET));
         }
     }
 

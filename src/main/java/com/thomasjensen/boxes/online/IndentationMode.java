@@ -1,6 +1,7 @@
 package com.thomasjensen.boxes.online;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.lang.NonNull;
 
 
 /**
@@ -10,13 +11,31 @@ public enum IndentationMode
 {
     /** indent box, not text inside of box */
     @JsonProperty("box")
-    Box,
+    Box("box"),
 
     /** indent text inside of box */
     @JsonProperty("text")
-    Text,
+    Text("text"),
 
     /** throw away indentation */
     @JsonProperty("none")
-    None;
+    None("none");
+
+
+    private final String argumentString;
+
+
+
+    private IndentationMode(@NonNull final String pArgumentString)
+    {
+        argumentString = pArgumentString;
+    }
+
+
+
+    @NonNull
+    public String getArgumentString()
+    {
+        return argumentString;
+    }
 }

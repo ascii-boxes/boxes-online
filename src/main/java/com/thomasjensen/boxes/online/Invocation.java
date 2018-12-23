@@ -7,7 +7,7 @@ import org.springframework.lang.Nullable;
 
 
 /**
- * Describes an invocation of *boxes* with all the parameters.
+ * Describes an invocation of <i>boxes</i> with all the parameters.
  */
 public class Invocation
     implements Serializable
@@ -41,30 +41,17 @@ public class Invocation
     public static class Alignment
         implements Serializable
     {
-        public static final Alignment DEFAULT = defaultAlignment();
+        @Nullable
+        @JsonProperty
+        private HorzAlign horizontal = HorzAlign.Left;
 
         @Nullable
         @JsonProperty
-        private HorzAlign horizontal;
+        private VertAlign vertical = VertAlign.Top;
 
         @Nullable
         @JsonProperty
-        private VertAlign vertical;
-
-        @Nullable
-        @JsonProperty
-        private HorzAlign justification;
-
-
-
-        private static Alignment defaultAlignment()
-        {
-            Alignment result = new Alignment();
-            result.setHorizontal(HorzAlign.Left);
-            result.setVertical(VertAlign.Top);
-            result.setJustification(null);
-            return result;
-        }
+        private HorzAlign justification = HorzAlign.Left;
 
 
 
@@ -117,19 +104,20 @@ public class Invocation
     public static class Padding
         implements Serializable
     {
-        public static final Padding DEFAULT = new Padding();
+        /** no padding specified -> use default from box design */
+        public static final int NOT_SET = -1;
 
         @JsonProperty
-        private int top;
+        private int top = NOT_SET;
 
         @JsonProperty
-        private int right;
+        private int right = NOT_SET;
 
         @JsonProperty
-        private int bottom;
+        private int bottom = NOT_SET;
 
         @JsonProperty
-        private int left;
+        private int left = NOT_SET;
 
 
 
@@ -194,10 +182,10 @@ public class Invocation
         implements Serializable
     {
         @JsonProperty
-        private int width;
+        private int width = 1;
 
         @JsonProperty
-        private int height;
+        private int height = 1;
 
 
 
@@ -234,10 +222,10 @@ public class Invocation
         implements Serializable
     {
         @JsonProperty
-        private int distance;
+        private int distance = 8;
 
         @JsonProperty
-        private LeadingTabHandlingMode leadingTabs;
+        private LeadingTabHandlingMode leadingTabs = LeadingTabHandlingMode.Expand;
 
 
 

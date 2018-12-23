@@ -59,29 +59,6 @@ public class InvocationTest
 
 
 
-    @Test
-    public void testDefaultAlignment()
-    {
-        final Invocation.Alignment underTest = Invocation.Alignment.DEFAULT;
-        Assert.assertEquals(HorzAlign.Left, underTest.getHorizontal());
-        Assert.assertEquals(VertAlign.Top, underTest.getVertical());
-        Assert.assertNull(underTest.getJustification());
-    }
-
-
-
-    @Test
-    public void testDefaultPadding()
-    {
-        final Invocation.Padding underTest = Invocation.Padding.DEFAULT;
-        Assert.assertEquals(0, underTest.getTop());
-        Assert.assertEquals(0, underTest.getRight());
-        Assert.assertEquals(0, underTest.getBottom());
-        Assert.assertEquals(0, underTest.getLeft());
-    }
-
-
-
     @Test(expected = InvalidFormatException.class)
     public void testInvalidJson()
         throws IOException
