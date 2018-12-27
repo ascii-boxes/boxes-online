@@ -25,7 +25,7 @@ public class InvocationTest
         Assert.assertNotNull(underTest.getAlignment());
         Assert.assertEquals(HorzAlign.Center, underTest.getAlignment().getHorizontal());
         Assert.assertEquals(VertAlign.Center, underTest.getAlignment().getVertical());
-        Assert.assertNull(underTest.getAlignment().getJustification());
+        Assert.assertEquals(HorzAlign.Left, underTest.getAlignment().getJustification());
         Assert.assertEquals("parchment", underTest.getDesign());
         Assert.assertEquals(IndentationMode.Box, underTest.getIndentationMode());
         Assert.assertFalse(underTest.isListDesigns());
