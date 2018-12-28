@@ -31,11 +31,22 @@ repositories {
 dependencies {
     compileOnly group: 'com.google.code.findbugs',   name: 'jsr305',           version: '3.0.1'
     compile     group: 'org.springframework.boot',   name: 'spring-boot-starter'
+    compile     group: 'org.springframework.boot',   name: 'spring-boot-starter-log4j2'
     compile     group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
     compile     group: 'org.zeroturnaround',         name: 'zt-exec',          version: '1.10'
     testCompile group: 'org.springframework.boot',   name: 'spring-boot-starter-test'
     testCompile group: 'org.assertj',                name: 'assertj-core',     version: '3.11.1'
 }
+configurations.all {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation' << '-proc:none'
+}
+
 
 idea.module {
     downloadSources = true;
