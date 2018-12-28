@@ -8,6 +8,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 
+/**
+ * Some unit tests for the {@link Invocation} class.
+ */
 public class InvocationTest
 {
     @Test
@@ -80,8 +83,8 @@ public class InvocationTest
         padding.setLeft(4);
         original.setPadding(padding);
         Invocation.Size size = new Invocation.Size();
-        size.setHeight(10);
         size.setWidth(42);
+        size.setHeight(10);
         original.setSize(size);
         original.setTabDistance(4);
         original.setVersion(true);
