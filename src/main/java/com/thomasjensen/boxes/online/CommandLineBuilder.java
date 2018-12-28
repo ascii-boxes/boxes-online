@@ -31,17 +31,17 @@ public class CommandLineBuilder
         if (pInvocation.isVersion()) {
             cmdLine.add("-v");
         }
-        else if (pInvocation.isListDesigns()) {
-            cmdLine.add("-l");
-            design(pInvocation.getDesign());
-        }
         else {
+            cmdLine.add("-i");
+            cmdLine.add("text");
+
             alignment(pInvocation.getAlignment());
             design(pInvocation.getDesign());
-            indentationMode(pInvocation.getIndentationMode());
             padding(pInvocation.getPadding());
             boxSize(pInvocation.getSize());
-            tabHandling(pInvocation.getTabHandling());
+
+            cmdLine.add("-t");
+            cmdLine.add(String.valueOf(pInvocation.getTabDistance()));
         }
         return cmdLine;
     }
@@ -85,16 +85,6 @@ public class CommandLineBuilder
 
 
 
-    private void indentationMode(@Nullable final IndentationMode pIndentationMode)
-    {
-        if (pIndentationMode != null) {
-            cmdLine.add("-i");
-            cmdLine.add(pIndentationMode.getArgumentString());
-        }
-    }
-
-
-
     private void padding(@Nullable final Invocation.Padding pPadding)
     {
         StringBuilder sb = new StringBuilder();
@@ -127,20 +117,6 @@ public class CommandLineBuilder
         if (pSize != null) {
             cmdLine.add("-s");
             cmdLine.add(pSize.getWidth() + "x" + pSize.getHeight());
-        }
-    }
-
-
-
-    private void tabHandling(@Nullable final Invocation.Tabs pTabHandling)
-    {
-        if (pTabHandling != null) {
-            String arg = String.valueOf(pTabHandling.getDistance());
-            if (pTabHandling.getLeadingTabs() != null) {
-                arg += pTabHandling.getLeadingTabs().getShortForm();
-            }
-            cmdLine.add("-t");
-            cmdLine.add(arg);
         }
     }
 }

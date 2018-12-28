@@ -15,10 +15,8 @@ public class InvocationTest
         throws IOException
     {
         final String json = "{\"alignment\": {\"horizontal\": \"center\", \"vertical\": \"center\"}, "
-            + "\"design\": \"parchment\", \"indentationMode\": \"box\", \"listDesigns\": false,"
-            + "\"padding\": {\"top\": 1, \"right\": 2, \"bottom\": 1, \"left\": 2}, "
-            + "\"size\": {\"width\": 42, \"height\": 10}, "
-            + "\"tabHandling\": {\"distance\": 4, \"leadingTabs\": \"expand\"}, \"version\": false}";
+            + "\"design\": \"parchment\", \"padding\": {\"top\": 1, \"right\": 2, \"bottom\": 1, \"left\": 2}, "
+            + "\"size\": {\"width\": 42, \"height\": 10}, \"tabDistance\": 4, \"version\": false}";
         final Invocation underTest = new ObjectMapper().readValue(json, Invocation.class);
 
         Assert.assertNotNull(underTest);
@@ -27,14 +25,10 @@ public class InvocationTest
         Assert.assertEquals(VertAlign.Center, underTest.getAlignment().getVertical());
         Assert.assertEquals(HorzAlign.Left, underTest.getAlignment().getJustification());
         Assert.assertEquals("parchment", underTest.getDesign());
-        Assert.assertEquals(IndentationMode.Box, underTest.getIndentationMode());
-        Assert.assertFalse(underTest.isListDesigns());
         Assert.assertNotNull(underTest.getSize());
         Assert.assertEquals(42, underTest.getSize().getWidth());
         Assert.assertEquals(10, underTest.getSize().getHeight());
-        Assert.assertNotNull(underTest.getTabHandling());
-        Assert.assertEquals(4, underTest.getTabHandling().getDistance());
-        Assert.assertEquals(LeadingTabHandlingMode.Expand, underTest.getTabHandling().getLeadingTabs());
+        Assert.assertEquals(4, underTest.getTabDistance());
         Assert.assertFalse(underTest.isVersion());
     }
 
@@ -50,10 +44,8 @@ public class InvocationTest
         Assert.assertNotNull(underTest);
         Assert.assertNull(underTest.getAlignment());
         Assert.assertNull(underTest.getDesign());
-        Assert.assertNull(underTest.getIndentationMode());
-        Assert.assertFalse(underTest.isListDesigns());
         Assert.assertNull(underTest.getSize());
-        Assert.assertNull(underTest.getTabHandling());
+        Assert.assertEquals(8, underTest.getTabDistance());
         Assert.assertTrue(underTest.isVersion());
     }
 
@@ -63,7 +55,7 @@ public class InvocationTest
     public void testInvalidJson()
         throws IOException
     {
-        final String json = "{\"indentationMode\": \"INVALID\"}";
+        final String json = "{\"alignment\": {\"horizontal\": \"INVALID\"}}";
         new ObjectMapper().readValue(json, Invocation.class);
         Assert.fail("expected InvalidFormatException was not thrown");
     }
@@ -81,8 +73,6 @@ public class InvocationTest
         alignment.setJustification(HorzAlign.Left);
         original.setAlignment(alignment);
         original.setDesign("dog");
-        original.setIndentationMode(IndentationMode.Text);
-        original.setListDesigns(false);
         Invocation.Padding padding = new Invocation.Padding();
         padding.setTop(1);
         padding.setRight(2);
@@ -93,10 +83,7 @@ public class InvocationTest
         size.setHeight(10);
         size.setWidth(42);
         original.setSize(size);
-        Invocation.Tabs tabs = new Invocation.Tabs();
-        tabs.setDistance(13);
-        tabs.setLeadingTabs(LeadingTabHandlingMode.Unexpand);
-        original.setTabHandling(tabs);
+        original.setTabDistance(4);
         original.setVersion(true);
 
         final String serialized = new ObjectMapper().writeValueAsString(original);

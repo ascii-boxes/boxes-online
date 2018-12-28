@@ -73,7 +73,7 @@ public class Validator
         handleDesignName(pInvocation.getDesign());
         handleBoxSize(pInvocation.getSize(), pThrowEx);
         handlePadding(pInvocation.getPadding());
-        handleTabs(pInvocation.getTabHandling(), pThrowEx);
+        handleTabs(pInvocation, pThrowEx);
         return pInvocation;
     }
 
@@ -122,15 +122,13 @@ public class Validator
 
 
 
-    private void handleTabs(@Nullable final Invocation.Tabs pTabs, final boolean pThrowEx)
+    private void handleTabs(@NonNull final Invocation pInvocation, final boolean pThrowEx)
         throws InvalidInvocationException
     {
-        if (pTabs != null) {
-            checkAndCorrect(pTabs.getDistance() < MIN_TABSIZE, () -> pTabs.setDistance(MIN_TABSIZE));
-            if (pTabs.getDistance() > MAX_TABSIZE) {
-                handleViolation(pThrowEx, () -> pTabs.setDistance(MAX_TABSIZE),
-                    "Tab distance of " + pTabs.getDistance() + " exceeds maximum tab distance of " + MAX_TABSIZE);
-            }
+        checkAndCorrect(pInvocation.getTabDistance() < MIN_TABSIZE, () -> pInvocation.setTabDistance(MIN_TABSIZE));
+        if (pInvocation.getTabDistance() > MAX_TABSIZE) {
+            handleViolation(pThrowEx, () -> pInvocation.setTabDistance(MAX_TABSIZE),
+                "Tab distance of " + pInvocation.getTabDistance() + " exceeds maximum tab distance of " + MAX_TABSIZE);
         }
     }
 

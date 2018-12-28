@@ -26,9 +26,7 @@ public class ValidatorTest
         throws InvalidInvocationException
     {
         Invocation invocation = new Invocation();
-        Invocation.Tabs tabs = new Invocation.Tabs();
-        tabs.setDistance(100);
-        invocation.setTabHandling(tabs);
+        invocation.setTabDistance(100);
         Validator underTest = new Validator(invocation);
         underTest.validate();
         Assert.fail("Expected InvalidInvocationException was not thrown");

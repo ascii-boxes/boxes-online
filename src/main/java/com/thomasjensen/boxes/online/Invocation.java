@@ -19,19 +19,13 @@ public class Invocation
     private String design;
 
     @JsonProperty
-    private IndentationMode indentationMode;
-
-    @JsonProperty
-    private boolean listDesigns;
-
-    @JsonProperty
     private Padding padding;
 
     @JsonProperty
     private Size size;
 
     @JsonProperty
-    private Tabs tabHandling;
+    private int tabDistance = 8;
 
     @JsonProperty
     private boolean version;
@@ -218,47 +212,6 @@ public class Invocation
 
 
 
-    public static class Tabs
-        implements Serializable
-    {
-        @JsonProperty
-        private int distance = 8;
-
-        @JsonProperty
-        private LeadingTabHandlingMode leadingTabs = LeadingTabHandlingMode.Expand;
-
-
-
-        public int getDistance()
-        {
-            return distance;
-        }
-
-
-
-        public void setDistance(final int pDistance)
-        {
-            distance = pDistance;
-        }
-
-
-
-        @Nullable
-        public LeadingTabHandlingMode getLeadingTabs()
-        {
-            return leadingTabs;
-        }
-
-
-
-        public void setLeadingTabs(@Nullable final LeadingTabHandlingMode pLeadingTabs)
-        {
-            leadingTabs = pLeadingTabs;
-        }
-    }
-
-
-
     @Nullable
     public Alignment getAlignment()
     {
@@ -285,35 +238,6 @@ public class Invocation
     public void setDesign(@Nullable final String pDesign)
     {
         design = pDesign;
-    }
-
-
-
-    @Nullable
-    public IndentationMode getIndentationMode()
-    {
-        return indentationMode;
-    }
-
-
-
-    public void setIndentationMode(@Nullable final IndentationMode pIndentationMode)
-    {
-        indentationMode = pIndentationMode;
-    }
-
-
-
-    public boolean isListDesigns()
-    {
-        return listDesigns;
-    }
-
-
-
-    public void setListDesigns(final boolean pListDesigns)
-    {
-        listDesigns = pListDesigns;
     }
 
 
@@ -348,17 +272,16 @@ public class Invocation
 
 
 
-    @Nullable
-    public Tabs getTabHandling()
+    public int getTabDistance()
     {
-        return tabHandling;
+        return tabDistance;
     }
 
 
 
-    public void setTabHandling(@Nullable final Tabs pTabHandling)
+    public void setTabDistance(final int pTabDistance)
     {
-        tabHandling = pTabHandling;
+        tabDistance = pTabDistance;
     }
 
 
