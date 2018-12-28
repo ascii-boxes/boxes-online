@@ -1,4 +1,4 @@
-package com.thomasjensen.boxes.online;
+package com.thomasjensen.boxes.online.and.so.on;
 /*
  * boxes-online - A Web UI for the 'boxes' tool
  * Copyright (C) 2018  Thomas Jensen and the contributors
@@ -14,39 +14,3 @@ package com.thomasjensen.boxes.online;
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-
-/**
- * Specify vertical alignment.
- */
-public enum VertAlign
-    implements ArgumentValue
-{
-    @JsonProperty("top")
-    Top('t'),
-
-    @JsonProperty("center")
-    Center('c'),
-
-    @JsonProperty("bottom")
-    Bottom('b');
-
-
-    private final char shortForm;
-
-
-
-    private VertAlign(final char pShortForm)
-    {
-        shortForm = pShortForm;
-    }
-
-
-
-    public char getShortForm()
-    {
-        return shortForm;
-    }
-}
