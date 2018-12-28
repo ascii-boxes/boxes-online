@@ -20,7 +20,6 @@ public class CommandLineBuilder
     {
         cmdLine = new ArrayList<>();
         cmdLine.add("boxes");
-        //cmdLine.add("-q");    // TODO
     }
 
 
@@ -32,6 +31,7 @@ public class CommandLineBuilder
             cmdLine.add("-v");
         }
         else {
+            cmdLine.add("-q");
             cmdLine.add("-i");
             cmdLine.add("text");
 
