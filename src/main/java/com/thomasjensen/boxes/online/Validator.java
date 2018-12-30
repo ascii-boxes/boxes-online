@@ -89,6 +89,7 @@ public class Validator
         handleBoxSize(pInvocation.getSize(), pThrowEx);
         handlePadding(pInvocation.getPadding());
         handleTabs(pInvocation, pThrowEx);
+        handleContent(pInvocation);
         return pInvocation;
     }
 
@@ -144,6 +145,17 @@ public class Validator
         if (pInvocation.getTabDistance() > MAX_TABSIZE) {
             handleViolation(pThrowEx, () -> pInvocation.setTabDistance(MAX_TABSIZE),
                 "Tab distance of " + pInvocation.getTabDistance() + " exceeds maximum tab distance of " + MAX_TABSIZE);
+        }
+    }
+
+
+
+    private void handleContent(final Invocation pInvocation)
+        throws InvalidInvocationException
+    {
+        //noinspection ConstantConditions
+        if (pInvocation.getContent() == null || pInvocation.getContent().isBlank()) {
+            throw new InvalidInvocationException("no box content specified");
         }
     }
 

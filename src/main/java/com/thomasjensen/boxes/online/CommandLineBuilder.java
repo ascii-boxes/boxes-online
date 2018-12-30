@@ -35,6 +35,9 @@ public class CommandLineBuilder
     {
         cmdLine = new ArrayList<>();
         cmdLine.add("boxes");
+        cmdLine.add("-q");
+        cmdLine.add("-i");
+        cmdLine.add("text");
     }
 
 
@@ -42,22 +45,14 @@ public class CommandLineBuilder
     @NonNull
     public List<String> build(@NonNull final Invocation pInvocation)
     {
-        if (pInvocation.isVersion()) {
-            cmdLine.add("-v");
-        }
-        else {
-            cmdLine.add("-q");
-            cmdLine.add("-i");
-            cmdLine.add("text");
+        alignment(pInvocation.getAlignment());
+        design(pInvocation.getDesign());
+        padding(pInvocation.getPadding());
+        boxSize(pInvocation.getSize());
 
-            alignment(pInvocation.getAlignment());
-            design(pInvocation.getDesign());
-            padding(pInvocation.getPadding());
-            boxSize(pInvocation.getSize());
+        cmdLine.add("-t");
+        cmdLine.add(String.valueOf(pInvocation.getTabDistance()));
 
-            cmdLine.add("-t");
-            cmdLine.add(String.valueOf(pInvocation.getTabDistance()));
-        }
         return cmdLine;
     }
 

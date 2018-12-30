@@ -18,6 +18,7 @@ package com.thomasjensen.boxes.online;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 
@@ -43,7 +44,7 @@ public class Invocation
     private int tabDistance = 8;
 
     @JsonProperty
-    private boolean version;
+    private String content;
 
 
 
@@ -301,15 +302,16 @@ public class Invocation
 
 
 
-    public boolean isVersion()
+    @NonNull
+    public String getContent()
     {
-        return version;
+        return content;
     }
 
 
 
-    public void setVersion(final boolean pVersion)
+    public void setContent(@NonNull final String pContent)
     {
-        version = pVersion;
+        content = pContent;
     }
 }

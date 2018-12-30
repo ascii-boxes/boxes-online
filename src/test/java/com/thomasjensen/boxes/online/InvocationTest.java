@@ -34,7 +34,7 @@ public class InvocationTest
     {
         final String json = "{\"alignment\": {\"horizontal\": \"center\", \"vertical\": \"center\"}, "
             + "\"design\": \"parchment\", \"padding\": {\"top\": 1, \"right\": 2, \"bottom\": 1, \"left\": 2}, "
-            + "\"size\": {\"width\": 42, \"height\": 10}, \"tabDistance\": 4, \"version\": false}";
+            + "\"size\": {\"width\": 42, \"height\": 10}, \"tabDistance\": 4, \"content\": \"unit test\"}";
         final Invocation underTest = new ObjectMapper().readValue(json, Invocation.class);
 
         Assert.assertNotNull(underTest);
@@ -47,16 +47,16 @@ public class InvocationTest
         Assert.assertEquals(42, underTest.getSize().getWidth());
         Assert.assertEquals(10, underTest.getSize().getHeight());
         Assert.assertEquals(4, underTest.getTabDistance());
-        Assert.assertFalse(underTest.isVersion());
+        Assert.assertEquals("unit test", underTest.getContent());
     }
 
 
 
     @Test
-    public void testDeserializationVersionOnly()
+    public void testDeserializationContentOnly()
         throws IOException
     {
-        final String json = "{\"version\": true}";
+        final String json = "{\"content\": \"unit test\"}";
         final Invocation underTest = new ObjectMapper().readValue(json, Invocation.class);
 
         Assert.assertNotNull(underTest);
@@ -64,7 +64,7 @@ public class InvocationTest
         Assert.assertNull(underTest.getDesign());
         Assert.assertNull(underTest.getSize());
         Assert.assertEquals(8, underTest.getTabDistance());
-        Assert.assertTrue(underTest.isVersion());
+        Assert.assertEquals("unit test", underTest.getContent());
     }
 
 
@@ -73,7 +73,7 @@ public class InvocationTest
     public void testInvalidJson()
         throws IOException
     {
-        final String json = "{\"alignment\": {\"horizontal\": \"INVALID\"}}";
+        final String json = "{\"alignment\": {\"horizontal\": \"INVALID\"}, \"content\": \"unit test\"}";
         new ObjectMapper().readValue(json, Invocation.class);
         Assert.fail("expected InvalidFormatException was not thrown");
     }
@@ -102,7 +102,7 @@ public class InvocationTest
         size.setHeight(10);
         original.setSize(size);
         original.setTabDistance(4);
-        original.setVersion(true);
+        original.setContent("unit test");
 
         final String serialized = new ObjectMapper().writeValueAsString(original);
         final Invocation deserialized = new ObjectMapper().readValue(serialized, Invocation.class);

@@ -28,23 +28,6 @@ import org.junit.Test;
 public class CommandLineBuilderTest
 {
     @Test
-    public void testVersionLeavesOutAotherArguments()
-    {
-        Invocation invocation = new Invocation();
-        invocation.setVersion(true);
-        Invocation.Size size = new Invocation.Size();
-        size.setWidth(30);
-        size.setHeight(11);
-        invocation.setSize(size);
-
-        final List<String> actual = new CommandLineBuilder().build(invocation);
-
-        Assertions.assertThat(actual).isEqualTo(Lists.list("boxes", "-v"));
-    }
-
-
-
-    @Test
     public void testAllArguments()
     {
         Invocation invocation = new Invocation();
@@ -65,6 +48,7 @@ public class CommandLineBuilderTest
         size.setHeight(11);
         invocation.setSize(size);
         invocation.setTabDistance(4);
+        invocation.setContent("some content");
 
         final List<String> actual = new CommandLineBuilder().build(invocation);
 
