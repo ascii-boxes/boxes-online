@@ -32,7 +32,19 @@ public class ValidatorTest
         invocation.setTabDistance(100);
         invocation.setContent("some content");
         Validator underTest = new Validator(invocation);
-        underTest.validate();
+        underTest.validate();   // should fail because tab size too large
+        Assert.fail("Expected InvalidInvocationException was not thrown");
+    }
+
+
+
+    @Test(expected = InvalidInvocationException.class)
+    public void testNoContent()
+        throws InvalidInvocationException
+    {
+        Invocation invocation = new Invocation();
+        Validator underTest = new Validator(invocation);
+        underTest.validate();   // should fail because no content was specified
         Assert.fail("Expected InvalidInvocationException was not thrown");
     }
 }

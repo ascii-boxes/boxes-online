@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 
 
 /**
@@ -27,14 +28,19 @@ import org.springframework.lang.Nullable;
  */
 public class CommandLineBuilder
 {
+    private final Invocation invocation;
+
     private final List<String> cmdLine;
 
 
 
-    public CommandLineBuilder()
+    public CommandLineBuilder(@NonNull final Invocation pInvocation)
     {
+        Assert.notNull(pInvocation, "missing required argument: pInvocation");
+        invocation = pInvocation;
+
         cmdLine = new ArrayList<>();
-        cmdLine.add("boxes");
+        cmdLine.add("boxes/boxes.exe"); // TODO system independent
         cmdLine.add("-q");
         cmdLine.add("-i");
         cmdLine.add("text");
@@ -43,15 +49,15 @@ public class CommandLineBuilder
 
 
     @NonNull
-    public List<String> build(@NonNull final Invocation pInvocation)
+    public List<String> build()
     {
-        alignment(pInvocation.getAlignment());
-        design(pInvocation.getDesign());
-        padding(pInvocation.getPadding());
-        boxSize(pInvocation.getSize());
+        alignment(invocation.getAlignment());
+        design(invocation.getDesign());
+        padding(invocation.getPadding());
+        boxSize(invocation.getSize());
 
         cmdLine.add("-t");
-        cmdLine.add(String.valueOf(pInvocation.getTabDistance()));
+        cmdLine.add(String.valueOf(invocation.getTabDistance()));
 
         return cmdLine;
     }

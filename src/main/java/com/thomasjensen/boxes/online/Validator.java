@@ -101,6 +101,7 @@ public class Validator
         if (pDesignName != null && pDesignName.length() > MAX_DESIGN_NAME_LEN) {
             throw new InvalidInvocationException("Specified design name too long");
         }
+        // TODO validate design name against list of supported designs
     }
 
 
