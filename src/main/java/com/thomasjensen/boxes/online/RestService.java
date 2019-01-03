@@ -16,9 +16,12 @@ package com.thomasjensen.boxes.online;
  */
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +40,8 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAutoConfiguration
 public class RestService
 {
+    private static final Logger LOG = LoggerFactory.getLogger(RestService.class);
+
     private final BoxesRunnerService boxesRunnerService;
 
 
@@ -53,6 +58,16 @@ public class RestService
     @PostMapping(value = "/draw", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> drawBox(@NonNull @RequestBody final Invocation pInvocation)
     {
+        if (LOG.isTraceEnabled()) {
+            try {
+                String json = new ObjectMapper().writeValueAsString(pInvocation);
+                LOG.trace("drawBox() - received request: " + json);
+            }
+            catch (JsonProcessingException | RuntimeException e) {
+                LOG.trace("drawBox() - received request: <ERROR>");
+            }
+        }
+
         try {
             new Validator(pInvocation).validate();
             List<String> cmdLine = new CommandLineBuilder(pInvocation).build();
@@ -67,12 +82,8 @@ public class RestService
             // TODO log
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        catch (ExecutionException e) {
-            // TODO
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
         catch (TimeoutException e) {
-            // TODO
+            // TODO when this happens, the server is under way to much stress
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

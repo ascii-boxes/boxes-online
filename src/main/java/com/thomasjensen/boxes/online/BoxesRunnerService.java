@@ -16,6 +16,7 @@ package com.thomasjensen.boxes.online;
  */
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.zeroturnaround.exec.InvalidResultException;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stop.ProcessStopper;
 
@@ -92,7 +94,7 @@ public class BoxesRunnerService
 
 
     public String execute(@NonNull final List<String> pCmdLine, @NonNull final String pInputText)
-        throws InterruptedException, TimeoutException, ExecutionException
+        throws InterruptedException, TimeoutException
     {
         Future<byte[]> future = executorService.submit(() -> {
             final ByteArrayInputStream bais = new ByteArrayInputStream(pInputText.getBytes(StandardCharsets.US_ASCII));
@@ -104,7 +106,7 @@ public class BoxesRunnerService
                     .redirectInput(bais)//
                     .readOutput(true)//
                     .stopper(new Stopper()).timeout(EXEC_TIMEOUT_SECS, TimeUnit.SECONDS)//
-                    .exitValueNormal()//     // TODO InvalidExitValueException -> BoxesExecutionException
+                    .exitValueNormal()//
                     .execute()//
                     .getOutput().getBytes());
         });
@@ -118,15 +120,22 @@ public class BoxesRunnerService
             return output;
         }
         catch (TimeoutException e) {
-            LOG.warn("Boxes execution timed out because of too long a wait in line: " + e.getCause().getMessage());
+            LOG.warn("Boxes execution timed out because no result was received after waiting for " + QUEUE_TIMEOUT_SECS
+                + " seconds. Boxes may still have been started, but too late. " + e.getCause().getMessage());
             throw e;
         }
         catch (ExecutionException e) {
-            if (e.getCause() instanceof TimeoutException) {
-                LOG.warn("Boxes execution took too long and timed out: " + e.getCause().getMessage());
-                throw (TimeoutException) e.getCause();
+            if (e.getCause() instanceof InvalidResultException || e.getCause() instanceof IOException//
+                || e.getCause() instanceof IllegalStateException)
+            {
+                // These are identified from org.zeroturnaround.exec.ProcessExecutor.waitFor() source
+                throw new BoxesExecutionException(e.getCause());
             }
-            throw e;
+            else if (e.getCause() instanceof TimeoutException) {
+                throw new BoxesExecutionException("Boxes executable ran for more than " + EXEC_TIMEOUT_SECS
+                    + " seconds, which is why the call timed out", e.getCause());
+            }
+            throw new BoxesExecutionException("Something unexpected went wrong running Boxes", e);
         }
     }
 }

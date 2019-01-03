@@ -17,6 +17,7 @@ package com.thomasjensen.boxes.online;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -28,6 +29,15 @@ import org.springframework.util.Assert;
  */
 public class CommandLineBuilder
 {
+    /** <code>true</code> if we are currently running on Windows */
+    private static final boolean OS_WIN = System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows");
+
+    /** path to the <i>boxes</i> executable */
+    static final String BOXES_EXECUTABLE = "boxes/boxes" + (OS_WIN ? ".exe" : "");
+
+    /** <i>boxes</i> config file to use */
+    private static final String BOXES_CONFIG = "boxes/boxes.cfg";
+
     private final Invocation invocation;
 
     private final List<String> cmdLine;
@@ -40,7 +50,9 @@ public class CommandLineBuilder
         invocation = pInvocation;
 
         cmdLine = new ArrayList<>();
-        cmdLine.add("boxes/boxes.exe"); // TODO system independent
+        cmdLine.add(BOXES_EXECUTABLE);
+        cmdLine.add("-f");
+        cmdLine.add(BOXES_CONFIG);
         cmdLine.add("-q");
         cmdLine.add("-i");
         cmdLine.add("text");

@@ -53,6 +53,7 @@ public class CommandLineBuilderTest
         final List<String> actual = new CommandLineBuilder(invocation).build();
 
         Assertions.assertThat(actual).isEqualTo(Lists.list(//
-            "boxes", "-q", "-i", "text", "-a", "hcvbjl", "-d", "dog", "-p", "t1r2b3l4", "-s", "30x11", "-t", "4"));
+            CommandLineBuilder.BOXES_EXECUTABLE, "-f", "boxes/boxes.cfg", "-q", "-i", "text", "-a", "hcvbjl", "-d",
+            "dog", "-p", "t1r2b3l4", "-s", "30x11", "-t", "4"));
     }
 }
