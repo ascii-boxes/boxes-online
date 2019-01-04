@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,13 +45,19 @@ public class RestService
 
     private final BoxesRunnerService boxesRunnerService;
 
+    private final Validator validator;
 
 
-    public RestService(final BoxesRunnerService pBoxesRunnerService)
+
+    @Autowired
+    public RestService(final BoxesRunnerService pBoxesRunnerService, final Validator pValidator)
     {
         super();
-        Assert.notNull(pBoxesRunnerService, "required runner was not injected");
+        Assert.notNull(pBoxesRunnerService, "BoxesRunnerService not injected");
         boxesRunnerService = pBoxesRunnerService;
+
+        Assert.notNull(pValidator, "Validator not injected");
+        validator = pValidator;
     }
 
 
@@ -69,7 +76,7 @@ public class RestService
         }
 
         try {
-            new Validator(pInvocation).validate();
+            validator.validate(pInvocation);
             List<String> cmdLine = new CommandLineBuilder(pInvocation).build();
             String resultBody = boxesRunnerService.execute(cmdLine, pInvocation.getContent());
             return new ResponseEntity<>(resultBody, HttpStatus.OK);

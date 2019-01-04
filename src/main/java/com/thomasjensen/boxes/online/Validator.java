@@ -15,8 +15,10 @@ package com.thomasjensen.boxes.online;
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.SerializationUtils;
 
@@ -24,6 +26,7 @@ import org.springframework.util.SerializationUtils;
 /**
  * Validates and optionally fixes an {@link Invocation}.
  */
+@Component
 public class Validator
 {
     /** min. width that can be specified on the <i>boxes</i> command line */
@@ -47,30 +50,33 @@ public class Validator
     /** max. length of an accepted box design name */
     private static final int MAX_DESIGN_NAME_LEN = 80;
 
-    private Invocation invocation;
+    private final DesignList designList;
 
 
 
-    public Validator(@NonNull final Invocation pInvocation)
+    @Autowired
+    public Validator(final DesignList pDesignList)
     {
-        Assert.notNull(pInvocation, "Argument pInvocation is null");
-        invocation = pInvocation;
+        Assert.notNull(pDesignList, "DesignList not injected");
+        designList = pDesignList;
     }
 
 
 
-    public void validate()
+    public void validate(@NonNull final Invocation pInvocation)
         throws InvalidInvocationException
     {
-        execute(invocation, true);
+        Assert.notNull(pInvocation, "Argument pInvocation is null");
+        execute(pInvocation, true);
     }
 
 
 
-    public Invocation checkup()
+    public Invocation checkup(@NonNull final Invocation pInvocation)
     {
+        Assert.notNull(pInvocation, "Argument pInvocation is null");
         Invocation copyInvocation = (Invocation) SerializationUtils.deserialize(
-            SerializationUtils.serialize(invocation));
+            SerializationUtils.serialize(pInvocation));
         assert copyInvocation != null;
         try {
             return execute(copyInvocation, false);
@@ -101,7 +107,9 @@ public class Validator
         if (pDesignName != null && pDesignName.length() > MAX_DESIGN_NAME_LEN) {
             throw new InvalidInvocationException("Specified design name too long");
         }
-        // TODO validate design name against list of supported designs
+        if (!designList.isSupported(pDesignName)) {
+            throw new InvalidInvocationException("Specified design does not exist");
+        }
     }
 
 

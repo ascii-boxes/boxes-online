@@ -17,13 +17,24 @@ package com.thomasjensen.boxes.online;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 
 /**
  * Unit tests for {@link Validator}.
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ValidatorTest
 {
+    @Autowired
+    private Validator underTest;
+
+
+
     @Test(expected = InvalidInvocationException.class)
     public void testTabsizeTooLarge()
         throws InvalidInvocationException
@@ -31,8 +42,7 @@ public class ValidatorTest
         Invocation invocation = new Invocation();
         invocation.setTabDistance(100);
         invocation.setContent("some content");
-        Validator underTest = new Validator(invocation);
-        underTest.validate();   // should fail because tab size too large
+        underTest.validate(invocation);   // should fail because tab size too large
         Assert.fail("Expected InvalidInvocationException was not thrown");
     }
 
@@ -43,8 +53,20 @@ public class ValidatorTest
         throws InvalidInvocationException
     {
         Invocation invocation = new Invocation();
-        Validator underTest = new Validator(invocation);
-        underTest.validate();   // should fail because no content was specified
+        underTest.validate(invocation);   // should fail because no content was specified
+        Assert.fail("Expected InvalidInvocationException was not thrown");
+    }
+
+
+
+    @Test(expected = InvalidInvocationException.class)
+    public void testUnknownDesign()
+        throws InvalidInvocationException
+    {
+        Invocation invocation = new Invocation();
+        invocation.setDesign("UNKNOWN");
+        invocation.setContent("some content");
+        underTest.validate(invocation);   // should fail because design unknown
         Assert.fail("Expected InvalidInvocationException was not thrown");
     }
 }
