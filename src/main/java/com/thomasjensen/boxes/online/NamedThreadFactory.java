@@ -18,6 +18,8 @@ package com.thomasjensen.boxes.online;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +28,10 @@ import org.springframework.stereotype.Component;
 public class NamedThreadFactory
     implements ThreadFactory
 {
-    private static final Thread.UncaughtExceptionHandler UEH = (final Thread t, final Throwable e) -> {
-        // TODO log the exception
+    private static final Logger LOG = LoggerFactory.getLogger(NamedThreadFactory.class);
+
+    private static final Thread.UncaughtExceptionHandler UEH = (final Thread pThread, final Throwable pExc) -> {
+        LOG.error("Uncaught exception in Boxes worker thread '" + pThread.getName() + "': " + pExc.getMessage(), pExc);
     };
 
     private final ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
