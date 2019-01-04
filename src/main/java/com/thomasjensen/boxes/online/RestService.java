@@ -65,14 +65,15 @@ public class RestService
     @PostMapping(value = "/draw", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> drawBox(@NonNull @RequestBody final Invocation pInvocation)
     {
-        if (LOG.isTraceEnabled()) {
+        if (LOG.isDebugEnabled()) {
+            String json = "";
             try {
-                String json = new ObjectMapper().writeValueAsString(pInvocation);
-                LOG.trace("drawBox() - received request: " + json);
+                json = new ObjectMapper().writeValueAsString(pInvocation);
             }
             catch (JsonProcessingException | RuntimeException e) {
-                LOG.trace("drawBox() - received request: <ERROR>");
+                json = "<ERROR>";
             }
+            LOG.debug("drawBox() - received request: " + json);
         }
 
         try {
@@ -82,16 +83,26 @@ public class RestService
             return new ResponseEntity<>(resultBody, HttpStatus.OK);
         }
         catch (InvalidInvocationException e) {
-            // TODO failed validation
+            if (LOG.isDebugEnabled()) {
+                String json = "";
+                try {
+                    json = new ObjectMapper().writeValueAsString(pInvocation);
+                }
+                catch (JsonProcessingException | RuntimeException ex) {
+                    LOG.debug("Error serializing invocation for error message: " + ex.getMessage(), ex);
+                }
+                LOG.debug("Invocation received did not validate. " + e.getMessage() + (json.isEmpty() ? ""
+                    : (" in " + json)));
+            }
             return new ResponseEntity<>("bad request: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         catch (InterruptedException | RuntimeException e) {
-            // TODO log
+            LOG.error("internal error: " + e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         catch (TimeoutException e) {
-            // TODO when this happens, the server is under way to much stress
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            LOG.error("Boxes worker thread timed out, which means the server is overloaded", e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 }
