@@ -15,6 +15,7 @@ package com.thomasjensen.boxes.online;
  */
 
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -95,13 +96,13 @@ public class RestService
             }
             return new ResponseEntity<>("bad request: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        catch (RejectedExecutionException | TimeoutException e) {
+            LOG.error("Boxes worker thread timed out or was rejected, which means the server is overloaded", e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+        }
         catch (InterruptedException | RuntimeException e) {
             LOG.error("internal error: " + e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        catch (TimeoutException e) {
-            LOG.error("Boxes worker thread timed out, which means the server is overloaded", e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 }

@@ -19,15 +19,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -50,6 +47,8 @@ public class BoxesRunnerService
     /** how long a thread can wait for the <i>boxes</i> execution to finish, including queue time */
     private static final long QUEUE_TIMEOUT_SECS = 20L;
 
+    // TODO How to shut down gracefully?
+    private final BoxesExecutionThreadPool executorService;
 
 
     /**
@@ -74,20 +73,10 @@ public class BoxesRunnerService
 
 
 
-    // TODO How to shut down gracefully?
-    private final ExecutorService executorService;
-
-
-
-    public BoxesRunnerService(@Value("${boxes.executable.parallelism}") final int pNumWorkers,
-        @NonNull final NamedThreadFactory pThreadFactory)
+    public BoxesRunnerService(@NonNull final BoxesExecutionThreadPool pExecutionThreadPool)
     {
-        Assert.notNull(pThreadFactory, "required parameter pThreadFactory was not injected");
-        Assert.isTrue(pNumWorkers > 0, "at least one worker must be configured");
-        executorService = Executors.newFixedThreadPool(pNumWorkers, pThreadFactory);
-        if (LOG.isInfoEnabled()) {
-            LOG.info(getClass().getSimpleName() + " started with parallelism of " + pNumWorkers);
-        }
+        Assert.notNull(pExecutionThreadPool, "BoxesExecutionThreadPool not injected");
+        executorService = pExecutionThreadPool;
     }
 
 

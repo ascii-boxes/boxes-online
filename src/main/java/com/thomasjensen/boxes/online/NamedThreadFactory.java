@@ -20,10 +20,8 @@ import java.util.concurrent.ThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
 
-@Component
 public class NamedThreadFactory
     implements ThreadFactory
 {
@@ -45,6 +43,9 @@ public class NamedThreadFactory
         result.setDaemon(true);
         result.setName("boxes-exec-" + result.getName());
         result.setUncaughtExceptionHandler(UEH);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Created new thread " + result.getName());
+        }
         return result;
     }
 }
