@@ -27,17 +27,29 @@ import org.springframework.lang.NonNull;
 /**
  * Execute an action and log a message about how long it took.
  */
-public class StopWatch
+public final class StopWatch
 {
     private static final Logger LOG = LoggerFactory.getLogger(StopWatch.class);
 
 
 
+    /**
+     * The action to time, with more precise exception declarations than {@code Callable}.
+     *
+     * @param <R> the type of the call result
+     */
     @FunctionalInterface
     public interface TimedAction<R>
     {
         R run()
             throws IOException, InterruptedException, TimeoutException, ExecutionException;
+    }
+
+
+
+    private StopWatch()
+    {
+        super();
     }
 
 

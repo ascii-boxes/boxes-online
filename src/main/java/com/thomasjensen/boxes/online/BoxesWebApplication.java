@@ -18,11 +18,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
+/**
+ * The main application class for this Spring Boot application. The action starts here.
+ */
 @SpringBootApplication
 public class BoxesWebApplication
 {
-    public static void main(String[] args)
+    public static void main(final String[] pArgs)
     {
-        SpringApplication.run(BoxesWebApplication.class, args);
+        SpringApplication.run(BoxesWebApplication.class, pArgs);
     }
 }

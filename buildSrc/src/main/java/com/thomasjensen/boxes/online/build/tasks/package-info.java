@@ -1,4 +1,4 @@
-package com.thomasjensen.boxes.online;
+// package-info.java
 /*
  * boxes-online - A Web UI for the 'boxes' tool
  * Copyright (C) 2018  Thomas Jensen and the contributors
@@ -14,21 +14,7 @@ package com.thomasjensen.boxes.online;
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-
 /**
- * A default generated Spring Boot test.
+ * Custom Gradle tasks for Boxes-Online.
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class BoxesWebApplicationTests
-{
-    @Test
-    public void contextLoads()
-    {
-    }
-}
+package com.thomasjensen.boxes.online.build.tasks;

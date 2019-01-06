@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    boxes-online - A Web UI for the 'boxes' tool
+    Copyright (C) 2018  Thomas Jensen and the contributors
+
+    This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+    License, version 2, as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+    details.
+
+    You should have received a copy of the GNU General Public License along with this program; if not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ -->
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+
+    <!-- Test classes are subject to a relaxed ruleset only. -->
+    <suppress files="[\\/]src[\\/]test[\\/]" id="TypeNameMain" />
+    <suppress files="[\\/]src[\\/]test[\\/]" checks="FileLength|MethodName" />
+    <suppress files="[\\/]src[\\/]test[\\/]java[\\/]" checks="JavadocMethod|JavadocVariable|JavadocPackage" />
+    <suppress files="[\\/]src[\\/]test[\\/]java[\\/]"
+        checks="MagicNumber|ClassDataAbstractionCoupling|ExecutableStatementCount|ThrowsCount|IllegalCatch" />
+    <suppress files="[\\/]src[\\/]test[\\/]java[\\/]" checks="EqualsAvoidNull|VisibilityModifier" />
+
+    <!-- Suppress the naming convention for test classes on production code (only one is active at a time) -->
+    <suppress files="[\\/]src[\\/]main[\\/]" id="TypeNameTest" />
+
+    <!-- the original boxes.cfg may contain tabs -->
+    <suppress files="[\\/]boxes[\\/]boxes\.cfg$" checks="FileTabCharacter" />
+
+    <!-- Can't follow this rule in the main class for Spring Boot technical reasons -->
+    <suppress files="[\\/]src[\\/]main[\\/]java[\\/].*?[\\/]BoxesWebApplication\.java$"
+        checks="HideUtilityClassConstructor" />
+
+</suppressions>

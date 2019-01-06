@@ -22,6 +22,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 
+/**
+ * The pool of Boxes execution worker threads, managed by Spring Boot.
+ */
 @Component
 public class BoxesExecutionThreadPool
     extends ThreadPoolTaskExecutor

@@ -51,6 +51,7 @@ public class BoxesRunnerService
     private final BoxesExecutionThreadPool executorService;
 
 
+
     /**
      * Forcibly stop a <i>boxes</i> worker process and log the fact.
      */
@@ -89,13 +90,13 @@ public class BoxesRunnerService
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Executing " + String.join(" ", pCmdLine));
             }
-            return StopWatch.timeAndLog("Boxes execution", () ->//
-                new ProcessExecutor().command(pCmdLine)//
-                    .redirectInput(bais)//
-                    .readOutput(true)//
-                    .stopper(new Stopper()).timeout(EXEC_TIMEOUT_SECS, TimeUnit.SECONDS)//
-                    .exitValueNormal()//
-                    .execute()//
+            return StopWatch.timeAndLog("Boxes execution", () -> //
+                new ProcessExecutor().command(pCmdLine) //
+                    .redirectInput(bais) //
+                    .readOutput(true) //
+                    .stopper(new Stopper()).timeout(EXEC_TIMEOUT_SECS, TimeUnit.SECONDS) //
+                    .exitValueNormal() //
+                    .execute() //
                     .getOutput().getBytes());
         });
 

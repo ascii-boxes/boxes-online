@@ -38,6 +38,9 @@ public class BoxDesign
 
 
 
+    /**
+     * Default box padding as defined by the box design.
+     */
     static class DefaultPadding
     {
         @JsonProperty

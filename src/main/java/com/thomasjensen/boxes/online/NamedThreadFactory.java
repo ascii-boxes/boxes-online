@@ -22,6 +22,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
 
+/**
+ * Thread factory for our boxes execution worker threads.
+ */
 public class NamedThreadFactory
     implements ThreadFactory
 {

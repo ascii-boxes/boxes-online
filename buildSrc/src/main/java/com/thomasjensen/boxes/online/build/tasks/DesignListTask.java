@@ -32,6 +32,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
@@ -40,12 +42,12 @@ import org.gradle.api.plugins.BasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.zeroturnaround.exec.ProcessExecutor;
 
 
+/**
+ * Create a JSON file listing the box design information required by the UI.
+ */
 public class DesignListTask
     extends DefaultTask
 {
@@ -54,6 +56,9 @@ public class DesignListTask
 
     /** <i>boxes</i> config file to use */
     private static final String BOXES_CONFIG = "boxes/boxes.cfg";
+
+    /** how long a <i>boxes</i> execution may take at most */
+    private static final long EXEC_TIMEOUT_SECS = 5L;
 
     private static final Pattern AUTHOR_REGEX = Pattern.compile("^Author:\\s+(.*?)$", Pattern.MULTILINE);
 
@@ -105,7 +110,8 @@ public class DesignListTask
         try {
             Map<String, BoxDesign> boxDesigns = readDesigns();
             outFile.getParentFile().mkdirs();
-            String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(boxDesigns);
+            String json = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(boxDesigns).concat(
+                System.lineSeparator());
             Files.writeString(Paths.get(outFile.toURI()), json, StandardCharsets.UTF_8, StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
         }
@@ -140,7 +146,7 @@ public class DesignListTask
     {
         List<String> linesRead = new ProcessExecutor().command(BOXES_EXECUTABLE, "-f", BOXES_CONFIG, "-ql")//
             .readOutput(true)//
-            .timeout(5, TimeUnit.SECONDS)//
+            .timeout(EXEC_TIMEOUT_SECS, TimeUnit.SECONDS)//
             .exitValueNormal()//
             .execute()//
             .getOutput().getLines(StandardCharsets.US_ASCII.name());
@@ -158,7 +164,7 @@ public class DesignListTask
     {
         String read = new ProcessExecutor().command(BOXES_EXECUTABLE, "-f", BOXES_CONFIG, "-qld", pDesignName)//
             .readOutput(true)//
-            .timeout(5, TimeUnit.SECONDS)//
+            .timeout(EXEC_TIMEOUT_SECS, TimeUnit.SECONDS)//
             .exitValueNormal()//
             .execute()//
             .getOutput().getString(StandardCharsets.US_ASCII.name());
@@ -255,12 +261,5 @@ public class DesignListTask
         }
         result = result.substring(start, end) + '\n';
         return result;
-    }
-
-
-
-    public File getOutFile()
-    {
-        return outFile;
     }
 }

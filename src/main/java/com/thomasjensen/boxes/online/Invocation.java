@@ -27,6 +27,9 @@ import org.springframework.lang.Nullable;
 public class Invocation
     implements Serializable
 {
+    /** default tabstop distance as defined by {@code boxes.h.in} */
+    private static final int DEFAULT_TAB_DISTANCE = 8;
+
     @JsonProperty
     private Alignment alignment;
 
@@ -40,13 +43,16 @@ public class Invocation
     private Size size;
 
     @JsonProperty
-    private int tabDistance = 8;
+    private int tabDistance = DEFAULT_TAB_DISTANCE;
 
     @JsonProperty
     private String content;
 
 
 
+    /**
+     * Sub-element with the alignment definition.
+     */
     public static class Alignment
         implements Serializable
     {
@@ -110,6 +116,9 @@ public class Invocation
 
 
 
+    /**
+     * Sub-element with the padding definition.
+     */
     public static class Padding
         implements Serializable
     {
@@ -187,6 +196,9 @@ public class Invocation
 
 
 
+    /**
+     * Sub-element with the box size definition.
+     */
     public static class Size
         implements Serializable
     {
