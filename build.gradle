@@ -75,6 +75,16 @@ idea.module {
 project.tasks.create('designList', DesignListTask.class);
 
 
+bootJar {
+    manifest {
+        attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version
+    }
+}
+springBoot {
+    buildInfo()
+}
+
+
 checkstyle {
     toolVersion '8.13'
 }
