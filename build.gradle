@@ -50,12 +50,13 @@ dependencies {
     compile     group: 'org.springframework.boot',   name: 'spring-boot-starter-log4j2'
     compile     group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
     compile     group: 'org.zeroturnaround',         name: 'zt-exec',          version: '1.10'
+    runtimeOnly group: 'org.fusesource.jansi',       name: 'jansi',            version: '1.17.1'
     testCompile group: 'org.springframework.boot',   name: 'spring-boot-starter-test'
     testCompile group: 'org.assertj',                name: 'assertj-core',     version: '3.11.1'
     checkstyle  group: 'com.thomasjensen.checkstyle.addons', name: 'checkstyle-addons', version: '5.2.1'
 }
-configurations.all {
-    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+configurations {
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 }
 
 
@@ -87,4 +88,6 @@ springBoot {
 
 checkstyle {
     toolVersion '8.13'
+    showViolations = true
+    //ignoreFailures = false
 }
